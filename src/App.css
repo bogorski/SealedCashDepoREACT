@@ -1,38 +1,154 @@
-.App {
-  text-align: center;
+@page {
+	margin: 0;
+}
+body {
+	margin: 0;
+}
+.sheet {
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+	box-sizing: border-box;
+	page-break-after: always;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/** Paper sizes **/
+
+body.A4 .sheet {
+	width: 210mm;
+	height: 296mm;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/** Fix for Chrome issue #273306 **/
+@media print {
+	body.A4 {
+		width: 210mm;
+	}
+}
+/*paper-css*/
+
+@media print {
+	.onlyScreen {
+		display: none;
+	}
+	.containerA4 {
+		width: 21cm;
+		height: 29.7cm;
+	}
+	.depositTicket {
+		margin: 0.5cm;
+	}
+}
+
+@media screen {
+	.containerA4 {
+		display: none;
+	}
+}
+
+.screenView {
+	max-width: 600px;
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+}
+
+.DepositTable {
+	max-width: 300px;
+}
+
+.onlyScreen {
+}
+
+.Input-component {
+	background-color: #5c66ff;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	color: white;
+}
+
+.header {
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+}
+
+.nextPage {
+	page-break-before: always;
+}
+
+.paragraph {
+	font-size: 1em;
+	margin: 0.5em 2em;
+}
+.row {
+	display: flex;
+}
+.containerA4 {
+	width: 21cm;
+	height: 29.7cm;
+	padding: 0;
+	margin: 0;
+}
+
+canvas {
+	/*transform: rotate(90deg) translateY(82px) translateX(81px);*/
+	width: 14.8cm;
+	height: 10.5cm;
+	object-fit: contain;
+}
+.myContainer {
+	display: flex;
+	width: 10.5cm;
+	height: 14.8cm;
+}
+
+img {
+	transform: rotate(90deg) translateY(82px) translateX(81px);
+	width: 14.8cm;
+	height: 10.5cm;
+}
+
+.tableStyle {
+	display: flex;
+	justify-content: center;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+	background-color: #282c34;
+	font-size: calc(16px + 2vmin);
+	color: white;
+	text-align: center;
+}
+.blankietCanvas {
+	/*	border: 1px solid red;*/
+	width: 10.5cm;
+	height: 14.8cm;
+	/*	width: 50%;
+	height: 50%;*/
 }
 
-.App-link {
-  color: #61dafb;
+table {
+	border-collapse: collapse;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.divButton {
+	text-align: center;
+}
+
+td {
+	border: 1px solid black;
+}
+
+td input {
+	width: 90% !important;
+	margin: auto;
+	display: block;
+}
+
+button {
+	margin-top: 0.5em;
+	font-size: 1em;
 }
