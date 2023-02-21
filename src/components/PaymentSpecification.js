@@ -112,6 +112,24 @@ function Table(props) {
 						thirdColumn={props.sumTens}
 						fourthColumn="PLN"
 					/>
+					<TableRow
+						firstColumn="0,05"
+						secondColumn="0"
+						thirdColumn="0,00"
+						fourthColumn="PLN"
+					/>
+					<TableRow
+						firstColumn="0,02"
+						secondColumn="0"
+						thirdColumn="0,00"
+						fourthColumn="PLN"
+					/>
+					<TableRow
+						firstColumn="0,01"
+						secondColumn="0"
+						thirdColumn="0,00"
+						fourthColumn="PLN"
+					/>
 				</tbody>
 				<tfoot>
 					<TableRow
@@ -133,22 +151,26 @@ function PaymentSpecification(props) {
 			<Paragraph text="DANE JEDNOSTKI ORGANIZACYJNEJ KLIENTA DOKONUJĄCEJ WPŁATY:" />
 			<div className="row">
 				<Paragraph text="Nazwa klienta:" />
-				<Paragraph text="Robert S" />
+				<Paragraph text={props.yourName} />
 			</div>
 			<div className="row">
 				<Paragraph text="Ulica:" />
-				<Paragraph text="al. Katowicka 66" />
+				<Paragraph text={props.yourStreet} />
+				<Paragraph text="Nr domu:" />
+				<Paragraph text={props.yourBuildingNr} />
+				<Paragraph text="Nr lokalu:" />
+				<Paragraph text={props.yourApartmenNr} />
 			</div>
 			<div className="row">
-				<Paragraph text="Kod pocztowy:" />
-				<Paragraph text="05-830" />
+				<Paragraph text={"Kod pocztowy:"} />
+				<Paragraph text={props.yourZipCode} />
 				<Paragraph text="Miejscowość:" />
-				<Paragraph text="Nadarzyn" />
+				<Paragraph text={props.yourCity} />
 			</div>
 			<Paragraph text="WPŁATA DOKONYWANA W ODDZIALE:" />
 			<div className="row">
 				<Paragraph text="Miasto:" />
-				<Paragraph text="Warszawa" />
+				<Paragraph text={props.branchCity} />
 			</div>
 			<div className="row">
 				<Paragraph text="Kwota wpłaty:" />

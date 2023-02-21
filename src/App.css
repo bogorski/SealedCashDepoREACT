@@ -131,13 +131,26 @@ img {
 }
 
 table {
+	width: 100%;
 	border-collapse: collapse;
+	table-layout: fixed;
+	vertical-align: top;
+	margin-bottom: 15px;
+	border: 1px solid #cccccc;
 }
 
 .divButton {
 	text-align: center;
 }
 
+tbody td:first-child {
+	width: 20%;
+	color: red;
+}
+td:nth-child(n + 2) {
+	width: 20%;
+	color: rgb(76, 0, 255);
+}
 td {
 	border: 1px solid black;
 }

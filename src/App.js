@@ -2,10 +2,37 @@ import "./App.css";
 import CashDepositTable from "./components/InputTable";
 import PaymentSpecification from "./components/PaymentSpecification.js";
 import { TransferFormView } from "./components/TransferFormView";
-import Table from "./components/TransferFormData";
+import {
+	YourDataTable,
+	RecipientDataTable,
+} from "./components/TransferFormData";
 import React from "react";
 import druk from "./images/druk.png";
+import {
+	convertValueNumberGroszy,
+	convertValueWordGroszy,
+} from "./components/convertNumbers";
 
+/*function NameForm({ product, onFilterTextChange }) {
+	return (
+		<label>
+			{product}
+			<input
+				type="text"
+				value={product}
+				onChange={(e) => onFilterTextChange(e.target.value)}
+			/>
+		</label>
+	);
+}*/
+/*function CityBank(props){
+	
+	return
+		name: "branchCity",
+		visibleName: "miasto oddziału w którym dokonano wpłaty",
+		value: props.branchCityValue,
+	},
+}*/
 class NameForm extends React.Component {
 	render() {
 		return (
@@ -24,7 +51,21 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			name: "",
+			yourName: "",
+			yourStreet: "",
+			yourBuildingNr: "",
+			yourApartmenNr: "",
+			yourZipCode: "",
+			yourCity: "",
+			branchCity: "",
+			recipientName: "",
+			recipientStreet: "",
+			recipientBuildingNr: "",
+			recipientApartmenNr: "",
+			recipientZipCode: "",
+			recipientCity: "",
+			recipientAccountNr: "",
+			paymentTitle: "",
 			sealNumber: "",
 			amountFives: 0,
 			amountTwos: 0,
@@ -32,21 +73,15 @@ class App extends React.Component {
 			amountFifty: 0,
 			amountTwenty: 0,
 			amountTens: 0,
-			sumFives: 0,
 			imgCanvas: "",
 			pushBtn: false,
-			formData: [
-				{ id: "recipientName", name: "nazwa klienta", value: "Automat" },
-				{ id: "recipentAdress", name: "adres klienta", value: "Kszów 199" },
-				{ id: "accountNumber", name: "numer konta", value: "123" },
-				{ id: "principalName", name: "nazwa zleceniodawcy", value: "Mateusz" },
-				{ id: "title", name: "tytuł", value: "wpłata z dnia" },
-			],
 		};
 		this.handleChange = this.handleChange.bind(this);
-		this.handleChangeFormData = this.handleChangeFormData.bind(this);
+		this.handleChangeData = this.handleChangeData.bind(this);
 		this.handleInputSealNumber = this.handleInputSealNumber.bind(this);
 		this.handleButtonPrint = this.handleButtonPrint.bind(this);
+		this.handleButtonSave = this.handleButtonSave.bind(this);
+		this.handleButtonLoad = this.handleButtonLoad.bind(this);
 		this.handleInputName = this.handleInputName.bind(this);
 	}
 
@@ -60,36 +95,10 @@ class App extends React.Component {
 			console.log("ok");
 		}
 	}
-	/*handleChangeFormData = (id) => {
-		console.log(this.state.formData);
-		this.setState((state) => {
-			const newList = [{}, {}];
-			return { formData: newList };
-		});
-	};*/
-	handleChangeFormData(event) {
-		//console.log(event);
-		//this.setState((state) => {
-		console.log(event.target, "event");
-		const selectId = event.target.id;
-		const formData = this.state.formData;
-		const newData = formData.map((obj) => {
-			console.log(obj, "przed");
-			if (obj.id === selectId) {
-				console.log(obj, "po");
-
-				return { ...obj, value: event.target.value };
-			} else {
-				//	console.log(" Nie OK");
-			}
-			return obj;
-		});
-		//	return { newData };
-		//	const newList = [{}, {}];
-		//	return { formData: newData };
-		//});
-
-		this.setState({ formData: newData });
+	handleChangeData(event) {
+		const value = event.target.value;
+		const name = event.target.name;
+		this.setState({ [name]: value });
 	}
 
 	handleInputSealNumber(event) {
@@ -113,7 +122,25 @@ class App extends React.Component {
 			value = event.target.value;
 		}
 		const name = event.target.name;
+		console.log(name, "name");
 		this.setState({ [name]: value });
+	}
+	handleButtonSave() {
+		const data = this.state;
+		console.log(data);
+		const data2 = {
+			yourName: this.state.yourName,
+			yourStreet: this.state.yourStreet,
+			yourBuildingNr: this.state.yourBuildingNr,
+		};
+		localStorage.setItem("my-key", JSON.stringify(data));
+		console.log("my-key");
+	}
+	handleButtonLoad() {
+		const stringifiedPerson = localStorage.getItem("my-key");
+		const personAsObjectAgain = JSON.parse(stringifiedPerson);
+		console.log(personAsObjectAgain, "wczytanie");
+		this.setState(personAsObjectAgain);
 	}
 	handleButtonPrint(event) {
 		this.setState({ pushBtn: true });
@@ -147,18 +174,42 @@ class App extends React.Component {
 					10
 			) / 10
 		).toFixed(2);
-		const wordValue = convertValue(totalValue);
+		const wordValue = convertValueNumberGroszy(totalValue);
 		const sealNumber = this.state.sealNumber;
+		const recipientAdressNr =
+			this.state.recipientApartmenNr && " m. " + this.state.recipientApartmenNr;
+		const recipientAdress =
+			this.state.recipientStreet +
+			" " +
+			this.state.recipientBuildingNr +
+			recipientAdressNr +
+			", " +
+			this.state.recipientZipCode +
+			" " +
+			this.state.recipientCity;
+
+		const yourAdressNr =
+			this.state.yourApartmenNr && " m. " + this.state.yourApartmenNr;
+		const yourAdress =
+			this.state.yourStreet +
+			" " +
+			this.state.yourBuildingNr +
+			yourAdressNr +
+			", " +
+			this.state.yourZipCode +
+			" " +
+			this.state.yourCity;
 		this.setState({
 			imgCanvas: print(
 				totalValue,
 				wordValue,
 				sealNumber,
-				this.state.formData[0].value,
-				this.state.formData[1].value,
-				this.state.formData[2].value,
-				this.state.formData[3].value,
-				this.state.formData[4].value
+				this.state.recipientName,
+				recipientAdress,
+				this.state.recipientAccountNr,
+				this.state.yourName,
+				yourAdress,
+				this.state.paymentTitle
 			),
 		});
 		//	window.print();
@@ -217,11 +268,6 @@ class App extends React.Component {
 						<header className="App-header">Wpłaty zamknięte</header>
 						<div className="Input-component ">
 							<NameForm
-								label="Imię i nazwisko"
-								value={this.state.name}
-								onChange={this.handleInputName}
-							/>
-							<NameForm
 								label="Numer plomby"
 								value={this.state.sealNumber}
 								onChange={this.handleInputSealNumber}
@@ -248,20 +294,34 @@ class App extends React.Component {
 						/>
 						<div className="divButton">
 							<TransferFormView onClick={this.handleButtonPrint} />
-							<TransferFormView onClick={this.handleButtonSend} />
+							<button onClick={this.handleButtonSave}>Zapisz</button>
+							<button onClick={this.handleButtonLoad}>Wczytaj</button>
 						</div>
 						<div>
 							<ul>
-								{this.state.formData.map((item) => (
-									<li key={item.id}>
-										<Table
-											id={item.id}
-											onChange={this.handleChangeFormData}
-											name={item.name}
-											value={item.value}
-										/>
-									</li>
-								))}
+								<YourDataTable
+									onChange={this.handleChangeData}
+									yourNameValue={this.state.yourName}
+									yourStreetValue={this.state.yourStreet}
+									yourBuildingNrValue={this.state.yourBuildingNr}
+									yourApartmenNrValue={this.state.yourApartmenNr}
+									yourZipCodeValue={this.state.yourZipCode}
+									yourCityValue={this.state.yourCity}
+									branchCityValue={this.state.branchCity}
+								/>
+							</ul>
+							<ul>
+								<RecipientDataTable
+									onChange={this.handleChangeData}
+									recipientNameValue={this.state.recipientName}
+									recipientStreetValue={this.state.recipientStreet}
+									recipientBuildingNrValue={this.state.recipientBuildingNr}
+									recipientApartmenNrValue={this.state.recipientApartmenNr}
+									recipientZipCodeValue={this.state.recipientZipCode}
+									recipientCityValue={this.state.recipientCity}
+									recipientAccountNrValue={this.state.recipientAccountNr}
+									paymentTitleValue={this.state.paymentTitle}
+								/>
 							</ul>
 						</div>
 					</div>
@@ -269,6 +329,16 @@ class App extends React.Component {
 
 				<div className="containerA4 A4 sheet">
 					<PaymentSpecification
+						yourName={this.state.yourName}
+						yourStreet={this.state.yourStreet}
+						yourBuildingNr={this.state.yourBuildingNr}
+						yourApartmenNr={this.state.yourApartmenNr}
+						yourZipCode={this.state.yourZipCode}
+						yourCity={this.state.yourCity}
+						branchCity={this.state.branchCity}
+						totalValue={totalValue}
+						AmountInWords={convertValueWordGroszy(totalValue)}
+						sealNumber={this.state.sealNumber}
 						amountFives={this.state.amountFives}
 						sumFives={sumFives}
 						amountTwos={this.state.amountTwos}
@@ -282,24 +352,21 @@ class App extends React.Component {
 						amountTens={this.state.amountTens}
 						sumTens={sumTens}
 						totalAmount={totalAmount}
-						totalValue={totalValue}
-						AmountInWords={convertValue(totalValue)}
-						sealNumber={this.state.sealNumber}
 					/>
 				</div>
 
 				<div className="containerA4 nextPage A4 sheet">
 					<div className="myContainer">
 						<div className="blankietCanvas">
-							<img className="imgimg"></img>
+							<img className="imgimg" alt="blankier"></img>
 						</div>
 						<div className="blankietCanvas">
-							<img className="imgimg"></img>
+							<img className="imgimg" alt="blankier"></img>
 						</div>
 					</div>
 					<div className="myContainer">
 						<div className="blankietCanvas">
-							<img className="imgimg"></img>
+							<img className="imgimg" alt="blankier"></img>
 						</div>
 					</div>
 				</div>
@@ -309,165 +376,6 @@ class App extends React.Component {
 }
 export default App;
 
-function convertThreeNumbers(number) {
-	number = number.toString();
-	let setki = null;
-	let dziesiatki = null;
-	let jednosci = null;
-	let numberWords = "";
-	if (number.length === 3) {
-		setki = number[0];
-		dziesiatki = number[1];
-		jednosci = number[2];
-	} else if (number.length === 2) {
-		dziesiatki = number[0];
-		jednosci = number[1];
-	} else if (number.length === 1) {
-		jednosci = number[0];
-	}
-	setki = Number(setki);
-	dziesiatki = Number(dziesiatki);
-	jednosci = Number(jednosci);
-	if (setki === 1) {
-		numberWords = "sto ";
-	} else if (setki === 2) {
-		numberWords = "dwieście ";
-	} else if (setki === 3) {
-		numberWords = "trzysta ";
-	} else if (setki === 4) {
-		numberWords = "czterysta ";
-	} else if (setki === 5) {
-		numberWords = "pięćset ";
-	} else if (setki === 6) {
-		numberWords = "sześćset ";
-	} else if (setki === 7) {
-		numberWords = "siedemset ";
-	} else if (setki === 8) {
-		numberWords = "osiemset ";
-	} else if (setki === 9) {
-		numberWords = "dziewięćset ";
-	}
-
-	if (dziesiatki === 2) {
-		numberWords += "dwadzieścia ";
-	} else if (dziesiatki === 3) {
-		numberWords = numberWords + "trzydzieści ";
-	} else if (dziesiatki === 4) {
-		numberWords = numberWords + "czterdzieści ";
-	} else if (dziesiatki === 5) {
-		numberWords = numberWords + "pięćdziesiąt ";
-	} else if (dziesiatki === 6) {
-		numberWords = numberWords + "sześćdziesiąt ";
-	} else if (dziesiatki === 7) {
-		numberWords = numberWords + "siedemdziesiąt ";
-	} else if (dziesiatki === 8) {
-		numberWords = numberWords + "osiemdziesiąt ";
-	} else if (dziesiatki === 9) {
-		numberWords = numberWords + "dziewięćdziesiąt ";
-	} else if (dziesiatki === 1) {
-		if (jednosci === 0) {
-			numberWords = numberWords + "dziesięć ";
-		} else if (jednosci === 1) {
-			numberWords = numberWords + "jedenaście ";
-		} else if (jednosci === 2) {
-			numberWords = numberWords + "dwanaście ";
-		} else if (jednosci === 3) {
-			numberWords = numberWords + "trzynaście ";
-		} else if (jednosci === 4) {
-			numberWords = numberWords + "czternaście ";
-		} else if (jednosci === 5) {
-			numberWords = numberWords + "piętnaście ";
-		} else if (jednosci === 6) {
-			numberWords = numberWords + "szesnaście ";
-		} else if (jednosci === 7) {
-			numberWords = numberWords + "siedemnaście ";
-		} else if (jednosci === 8) {
-			numberWords = numberWords + "osiemnaście ";
-		} else if (jednosci === 9) {
-			numberWords = numberWords + "dziewiętnaście ";
-		}
-	}
-
-	if (dziesiatki === 1) {
-	} else if (jednosci === 1) {
-		numberWords = numberWords + "jeden ";
-	} else if (jednosci === 2) {
-		numberWords = numberWords + "dwa ";
-	} else if (jednosci === 3) {
-		numberWords = numberWords + "trzy ";
-	} else if (jednosci === 4) {
-		numberWords = numberWords + "cztery ";
-	} else if (jednosci === 5) {
-		numberWords = numberWords + "pięć ";
-	} else if (jednosci === 6) {
-		numberWords = numberWords + "sześć ";
-	} else if (jednosci === 7) {
-		numberWords = numberWords + "siedem ";
-	} else if (jednosci === 8) {
-		numberWords = numberWords + "osiem ";
-	} else if (jednosci === 9) {
-		numberWords = numberWords + "dziewięć ";
-	}
-	return numberWords;
-}
-
-function convertNumbersToWords(number) {
-	number = number.toString();
-
-	let word = "";
-	let tab = [];
-
-	if (number.length % 3 === 1) {
-		tab.push(number[0]);
-		for (let i = 0; i < Math.floor(number.length / 3); i++) {
-			let numberTemp = number.substr(1);
-			tab.push(numberTemp.substr(-(numberTemp.length - 3 * i), 3));
-		}
-	} else if (number.length % 3 === 2) {
-		tab.push(number.substr(0, 2));
-		for (let i = 0; i < Math.floor(number.length / 3); i++) {
-			let numberTemp = number.substr(2);
-			tab.push(numberTemp.substr(-(numberTemp.length - 3 * i), 3));
-		}
-	} else if (number.length % 3 === 0) {
-		for (let i = 0; i < Math.floor(number.length / 3); i++) {
-			tab.push(number.substr(-(number.length - 3 * i), 3));
-		}
-	}
-
-	for (let i = 0; i < tab.length; i++) {
-		word = word + convertThreeNumbers(tab[i]);
-		if (tab.length === 2 && i === 0) {
-			word = word + "tyś ";
-		}
-	}
-
-	return word;
-}
-
-function convertValue(number) {
-	let valueZlotych = number.substr(0, number.length - 3);
-	let valueGroszy = number.substr(-2);
-
-	valueZlotych = Number(valueZlotych);
-	valueGroszy = Number(valueGroszy);
-
-	let wordGroszy = "";
-	let wordZlotych = "";
-	if (valueGroszy === 0) {
-		wordGroszy = "zero ";
-	} else {
-		wordGroszy = convertNumbersToWords(valueGroszy);
-	}
-	if (valueZlotych === 0) {
-		wordZlotych = "zero ";
-	} else {
-		wordZlotych = convertNumbersToWords(valueZlotych);
-	}
-
-	return wordZlotych + "zł i " + wordGroszy + "gr";
-}
-
 function print(
 	totalValue,
 	wordValue,
@@ -475,47 +383,47 @@ function print(
 	recipentName,
 	recipentAdress,
 	accountNumber,
-	principalName,
+	yourName,
+	yourAdress,
 	title
 ) {
 	const canvas = document.createElement("canvas");
 	const ctx = canvas.getContext("2d");
 	canvas.height = 1253;
 	canvas.width = 1772;
-	//	const ttt = document.querySelector(".divCanvas");
-	//ttt.appendChild(canvas);
 	const image = new Image();
-	console.log(totalValue);
 	image.onload = canvasLoadAsync;
-	function canvasLoad() {
-		ctx.drawImage(image, 0, 0);
-		let aaa = recipentName;
-		aaa = aaa.toUpperCase();
-		if (aaa.length > 27) {
-			aaa = [...aaa];
-			for (let i = 0; i < aaa.length; i++) {
-				if (aaa[i] === ".") {
-					aaa[i - 1] = aaa[i - 1] + aaa[i];
-					aaa.splice(i, 1);
+	function formField(text, x, y) {
+		if (text.length <= 27) {
+			text = text.toUpperCase();
+			for (let i = 0; i < text.length; i++) {
+				ctx.font = "bold 50px Courier";
+				if (i === 0) {
+					ctx.fillText(text[i], x, y);
+				} else {
+					ctx.fillText(text[i], x + 59 * i, y);
 				}
 			}
-		}
-		for (let i = 0; i < aaa.length; i++) {
-			//ctx.moveTo(20, i*20);
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(aaa[i], 110, 100);
-			} else {
-				ctx.fillText(aaa[i], 110 + 59 * i, 100);
+		} else {
+			for (let i = 0; i < text.length; i++) {
+				ctx.font = "bold 50px Courier";
+				ctx.fillText(text, x, y);
 			}
 		}
-		console.log(aaa);
-		const bbb = recipentAdress;
-		const nr = accountNumber;
-
-		let kwota = totalValue;
-		const nazwaZleceniodwacy = principalName;
-		const nazwaZlecenia = title;
+	}
+	function canvasLoad() {
+		ctx.drawImage(image, 0, 0);
+		formField(recipentName, 110, 100);
+		formField(recipentAdress, 110, 200);
+		formField(accountNumber, 110, 300);
+		const sum = totalValue.toString();
+		formField(sum, 1003, 400);
+		formField(wordValue, 110, 500);
+		formField(yourName, 110, 600);
+		formField(yourAdress, 110, 700);
+		formField(title, 110, 800);
+		const secureEnvelope = "BEZPIECZNA KOPERTA O NR. " + sealNumber;
+		formField(secureEnvelope, 110, 900);
 		/*const now = new Date();
 			"UTARG WARSZAWA " +
 			(now.getDate() < 10 ? "0" + now.getDate() : now.getDate()) +
@@ -525,106 +433,15 @@ function print(
 			"." +
 			now.getFullYear();
       */
-		for (let i = 0; i < bbb.length; i++) {
-			//ctx.moveTo(20, i*20);
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(bbb[i], 110, 200);
-			} else {
-				ctx.fillText(bbb[i], 110 + 59 * i, 200);
-			}
-		}
-
-		for (let i = 0; i < nr.length; i++) {
-			//ctx.moveTo(20, i*20);
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(nr[i], 110, 300);
-			} else {
-				ctx.fillText(nr[i], 110 + 59 * i, 300);
-			}
-		}
-		console.log(kwota.toString());
-		kwota = kwota.toString();
-		//console.log(kwota.number().length);
-		for (let i = 0; i < kwota.length; i++) {
-			console.log(kwota);
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(kwota[i], 1003, 400);
-			} else {
-				ctx.fillText(kwota[i], 1003 + 59 * i, 400);
-			}
-		}
-		/////
-		let vbb = wordValue;
-		//console.log(vbb)
-		for (let i = 0; i < vbb.length; i++) {
-			ctx.font = "bold 30px Courier";
-			if (i === 0) {
-				ctx.fillText(vbb[i], 110, 500);
-			} else {
-				ctx.fillText(vbb[i], 110 + 20 * i, 500);
-			}
-		}
-
-		for (let i = 0; i < nazwaZleceniodwacy.length; i++) {
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(nazwaZleceniodwacy[i], 110, 600);
-			} else {
-				ctx.fillText(nazwaZleceniodwacy[i], 110 + 59 * i, 600);
-			}
-		}
-
-		for (let i = 0; i < nazwaZlecenia.length; i++) {
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(nazwaZlecenia[i], 110, 800);
-			} else {
-				ctx.fillText(nazwaZlecenia[i], 110 + 59 * i, 800);
-			}
-		}
-
-		for (let i = 0; i < nazwaZleceniodwacy.length; i++) {
-			ctx.font = "bold 50px Courier";
-			if (i === 0) {
-				ctx.fillText(nazwaZleceniodwacy[i], 110, 900);
-			} else {
-				ctx.fillText(nazwaZleceniodwacy[i], 110 + 59 * i, 900);
-			}
-		}
-		/////////
-		const koperta = "BEZPIECZNA KOPERTA O NR. " + sealNumber;
-		ctx.font = "bold 30px Courier";
-		ctx.fillText(koperta, 110, 1000);
 		const url = canvas.toDataURL("image/jpeg", 0.5);
-		/*console.log(url);
-		const divImg = document.querySelector(".divImg");
-		const img = document.createElement("img");
-		//	const url = this.state.imgCanvas;
-		img.src = url;
-		console.log(url);
-		img.classList.add("imgimg");
-		divImg.appendChild(img);*/
 		const img = document.querySelectorAll(".imgimg");
-		console.log(img);
 		img.forEach(function (img) {
 			img.src = url;
 		});
 		console.log("imge wczytany 1111");
-
-		//printCanvas();
-		//	window.setTimeout(printCanvas, 1000);
 		console.log("imge wczytany 222");
 	}
 	image.src = druk;
-	/*	canvas.onload = function () {
-		console.log("wczytany");
-	};
-	printCanvas();*/
-	//window.setTimeout(printCanvas, 1000);
-
 	async function canvasLoadAsync() {
 		await canvasLoad();
 		await printCanvas();
