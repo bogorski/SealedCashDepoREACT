@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/SealedCashDepoREACT/static/css/main.a76e2b1a.css",
+    "main.js": "/SealedCashDepoREACT/static/js/main.c7f1124e.js",
+    "static/js/787.91732e66.chunk.js": "/SealedCashDepoREACT/static/js/787.91732e66.chunk.js",
+    "static/media/druk.png": "/SealedCashDepoREACT/static/media/druk.93902dc5de987b5e27d2.png",
+    "index.html": "/SealedCashDepoREACT/index.html",
+    "main.a76e2b1a.css.map": "/SealedCashDepoREACT/static/css/main.a76e2b1a.css.map",
+    "main.c7f1124e.js.map": "/SealedCashDepoREACT/static/js/main.c7f1124e.js.map",
+    "787.91732e66.chunk.js.map": "/SealedCashDepoREACT/static/js/787.91732e66.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a76e2b1a.css",
+    "static/js/main.c7f1124e.js"
+  ]
+}
