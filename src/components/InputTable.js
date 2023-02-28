@@ -3,8 +3,30 @@ import React from "react";
 function TableRow(props) {
 	return (
 		<tr>
-			<td>{props.firstColumn}</td>
+			<th>{props.firstColumn}</th>
 			<td>{props.secondColumn}</td>
+			<td>{props.thirdColumn}</td>
+		</tr>
+	);
+}
+
+function TableRowHeader(props) {
+	return (
+		<tr>
+			<th>{props.firstColumn}</th>
+			<th>{props.secondColumn}</th>
+			<th>{props.thirdColumn}</th>
+		</tr>
+	);
+}
+
+function TableRowAlert(props) {
+	return (
+		<tr>
+			<th>{props.firstColumn}</th>
+			<td className={props.overloadedAlert > 16 ? "alert" : ""}>
+				{props.secondColumn}
+			</td>
 			<td>{props.thirdColumn}</td>
 		</tr>
 	);
@@ -114,29 +136,32 @@ class CashDepositTable extends React.Component {
 			)
 		);
 		return (
-			<table>
-				<thead>
-					<TableRow
-						firstColumn="Nominał"
-						secondColumn="Ilość"
-						thirdColumn="Razem"
-					/>
-				</thead>
+			<div className="container">
+				<table className="tableValue">
+					<thead>
+						<TableRowHeader
+							firstColumn="Nominał"
+							secondColumn="Ilość"
+							thirdColumn="Razem"
+						/>
+					</thead>
 
-				<tbody>{list}</tbody>
-				<tfoot>
-					<TableRow
-						firstColumn="Razem"
-						secondColumn={this.props.totalAmount}
-						thirdColumn={this.props.totalValue}
-					/>
-					<TableRow
-						firstColumn="Waga"
-						secondColumn={this.props.overloaded}
-						thirdColumn={this.props.sumWeight}
-					/>
-				</tfoot>
-			</table>
+					<tbody>{list}</tbody>
+					<tfoot>
+						<TableRow
+							firstColumn="Razem"
+							secondColumn={this.props.totalAmount}
+							thirdColumn={this.props.totalValue}
+						/>
+						<TableRowAlert
+							firstColumn="Waga"
+							secondColumn={this.props.overloaded}
+							overloadedAlert={this.props.overloadedAlert}
+							thirdColumn={this.props.sumWeight}
+						/>
+					</tfoot>
+				</table>
+			</div>
 		);
 	}
 }

@@ -1,0 +1,10 @@
+label {
+	margin: 5px;
+}
+
+#seal {
+	width: 50%;
+	display: block;
+	margin: 5px;
+	border-radius: 4px;
+}

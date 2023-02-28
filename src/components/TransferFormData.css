@@ -1,0 +1,14 @@
+.tableData {
+	width: 100%;
+	border-collapse: collapse;
+	border-style: hidden;
+	table-layout: fixed;
+	vertical-align: top;
+	margin-bottom: 15px;
+	padding: 10px;
+}
+
+.tableData th {
+	font-size: 1.2em;
+	padding-bottom: 0.5em;
+}

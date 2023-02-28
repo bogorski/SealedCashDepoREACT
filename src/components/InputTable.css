@@ -1,0 +1,19 @@
+.alert {
+	color: #ff0e0a;
+	font-weight: bold;
+}
+
+.tableValue {
+	width: 100%;
+	border-collapse: collapse;
+	border-style: hidden;
+	table-layout: fixed;
+	vertical-align: top;
+	margin-bottom: 15px;
+}
+.tableValue th:first-child {
+	width: 20%;
+}
+.tableValue th:nth-child(n + 2) {
+	width: 40%;
+}

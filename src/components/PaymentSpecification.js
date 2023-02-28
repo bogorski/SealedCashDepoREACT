@@ -1,38 +1,65 @@
 import React from "react";
 
-function Header(props) {
+function Col12(props) {
 	return (
-		<div>
-			<p className="header">{props.text}</p>
+		<div className="row">
+			<div className="col-12">
+				<p>
+					{props.name}&emsp;{props.value}{" "}
+				</p>
+			</div>
 		</div>
 	);
 }
 
-function Paragraph(props) {
+function Col4(props) {
 	return (
-		<div>
-			<p className="paragraph">{props.text}</p>
+		<div className="row">
+			<div className="col-4">
+				<p>
+					{props.firstName}&emsp;{props.firstValue}{" "}
+				</p>
+			</div>
+			<div className="col-4">
+				<p>
+					{props.secondName}&emsp;{props.secondValue}{" "}
+				</p>
+			</div>
+			<div className="col-4">
+				<p>
+					{props.thirdName}&emsp;{props.thirdValue}{" "}
+				</p>
+			</div>
 		</div>
 	);
 }
 
-function TableRow(props) {
+function TableRow({ firstColumn, secondColumn = "0", thirdColumn = "0.00" }) {
 	return (
 		<tr>
-			<td>{props.firstColumn}</td>
-			<td>{props.secondColumn}</td>
-			<td>{props.thirdColumn}</td>
-			<td>{props.fourthColumn}</td>
+			<td>{firstColumn}</td>
+			<td>{secondColumn}</td>
+			<td>{thirdColumn}</td>
+			<td>PLN</td>
 		</tr>
 	);
 }
-
+function TableRowHeader(props) {
+	return (
+		<tr>
+			<th>{props.firstColumn}</th>
+			<th>{props.secondColumn}</th>
+			<th>{props.thirdColumn}</th>
+			<th>{props.fourthColumn}</th>
+		</tr>
+	);
+}
 function Table(props) {
 	return (
-		<div className="tableStyle">
+		<div className="tablePrint">
 			<table>
 				<thead>
-					<TableRow
+					<TableRowHeader
 						firstColumn="Nominał"
 						secondColumn="Ilość sztuk"
 						thirdColumn="Kwota"
@@ -40,103 +67,51 @@ function Table(props) {
 					/>
 				</thead>
 				<tbody>
-					<TableRow
-						firstColumn="500,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="200,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="100,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="50,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="20,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="10,00"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
+					<TableRow firstColumn="500,00" />
+					<TableRow firstColumn="200,00" />
+					<TableRow firstColumn="100,00" />
+					<TableRow firstColumn="50,00" />
+					<TableRow firstColumn="20,00" />
+					<TableRow firstColumn="10,00" />
 					<TableRow
 						firstColumn="5,00"
 						secondColumn={props.amountFives}
 						thirdColumn={props.sumFives}
-						fourthColumn="PLN"
 					/>
 					<TableRow
 						firstColumn="2,00"
 						secondColumn={props.amountTwos}
 						thirdColumn={props.sumTwos}
-						fourthColumn="PLN"
 					/>
 					<TableRow
 						firstColumn="1,00"
 						secondColumn={props.amountOnes}
 						thirdColumn={props.sumOnes}
-						fourthColumn="PLN"
 					/>
 					<TableRow
 						firstColumn="0,50"
 						secondColumn={props.amountFifty}
 						thirdColumn={props.sumFifty}
-						fourthColumn="PLN"
 					/>
 					<TableRow
 						firstColumn="0,20"
 						secondColumn={props.amountTwenty}
 						thirdColumn={props.sumTwenty}
-						fourthColumn="PLN"
 					/>
 					<TableRow
 						firstColumn="0,10"
 						secondColumn={props.amountTens}
 						thirdColumn={props.sumTens}
-						fourthColumn="PLN"
 					/>
-					<TableRow
-						firstColumn="0,05"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="0,02"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
-					<TableRow
-						firstColumn="0,01"
-						secondColumn="0"
-						thirdColumn="0,00"
-						fourthColumn="PLN"
-					/>
+					<TableRow firstColumn="0,05" />
+					<TableRow firstColumn="0,02" />
+					<TableRow firstColumn="0,01" />
 				</tbody>
 				<tfoot>
 					<TableRow
 						firstColumn="Razem"
 						secondColumn={props.totalAmount}
 						thirdColumn={props.totalValue}
-						fourthColumn="PLN"
 					/>
 				</tfoot>
 			</table>
@@ -147,44 +122,33 @@ function Table(props) {
 function PaymentSpecification(props) {
 	return (
 		<div className="containerA4">
-			<Header text="Specyfikacja wpłaty zamkniętej" />
-			<Paragraph text="DANE JEDNOSTKI ORGANIZACYJNEJ KLIENTA DOKONUJĄCEJ WPŁATY:" />
-			<div className="row">
-				<Paragraph text="Nazwa klienta:" />
-				<Paragraph text={props.yourName} />
-			</div>
-			<div className="row">
-				<Paragraph text="Ulica:" />
-				<Paragraph text={props.yourStreet} />
-				<Paragraph text="Nr domu:" />
-				<Paragraph text={props.yourBuildingNr} />
-				<Paragraph text="Nr lokalu:" />
-				<Paragraph text={props.yourApartmenNr} />
-			</div>
-			<div className="row">
-				<Paragraph text={"Kod pocztowy:"} />
-				<Paragraph text={props.yourZipCode} />
-				<Paragraph text="Miejscowość:" />
-				<Paragraph text={props.yourCity} />
-			</div>
-			<Paragraph text="WPŁATA DOKONYWANA W ODDZIALE:" />
-			<div className="row">
-				<Paragraph text="Miasto:" />
-				<Paragraph text={props.branchCity} />
-			</div>
-			<div className="row">
-				<Paragraph text="Kwota wpłaty:" />
-				<Paragraph text={props.totalValue} />
-			</div>
-			<div className="row">
-				<Paragraph text="Słownie:" />
-				<Paragraph text={props.AmountInWords} />
-			</div>
-			<Paragraph text="SPECYFIKACJA WPŁATY:" />
-			<div className="row">
-				<Paragraph text="Dotyczy bezpiecznej koperty o nr:" />
-				<Paragraph text={props.sealNumber} />
-			</div>
+			<h2>Specyfikacja wpłaty zamkniętej </h2>
+			<h4>DANE JEDNOSTKI ORGANIZACYJNEJ KLIENTA DOKONUJĄCEJ WPŁATY:</h4>
+			<Col12 name="Nazwa klienta:" value={props.yourName} />
+			<Col4
+				firstName="Ulica:"
+				firstValue={props.yourStreet}
+				secondName="Nr domu:"
+				secondValue={props.yourBuildingNr}
+				thirdName="Nr lokalu:"
+				thirdValue={props.yourApartmenNr}
+			/>
+			<Col4
+				firstName="Kod pocztowy:"
+				firstValue={props.yourZipCode}
+				secondName="Miejscowość:"
+				secondValue={props.yourCity}
+			/>
+			<h4>WPŁATA DOKONYWANA W ODDZIALE:</h4>
+			<Col12 name="Miasto:" value={props.branchCity} />
+			<Col12 name="Kwota wpłaty:" value={props.totalValue} />
+			<Col12 name="Słownie:" value={props.AmountInWords} />
+
+			<h4>SPECYFIKACJA WPŁATY:</h4>
+			<Col12
+				name="Dotyczy bezpiecznej koperty o nr:"
+				value={props.sealNumber}
+			/>
 			<div>
 				<Table
 					amountFives={props.amountFives}

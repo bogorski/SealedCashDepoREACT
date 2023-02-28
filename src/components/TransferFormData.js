@@ -1,12 +1,4 @@
 import React from "react";
-function TableRow(props) {
-	return (
-		<tr>
-			<td>{props.firstColumn}</td>
-			<td>{props.secondColumn}</td>
-		</tr>
-	);
-}
 class InputData extends React.Component {
 	handleSelect(event) {
 		event.target.select();
@@ -81,14 +73,16 @@ function YourDataTable(props) {
 		/>
 	));
 	return (
-		<table>
-			<thead>
-				<tr>
-					<td colSpan="2">Dane wpłacającego</td>
-				</tr>
-			</thead>
-			<tbody>{list}</tbody>
-		</table>
+		<div className="container">
+			<table className="tableData">
+				<thead>
+					<tr>
+						<th colSpan="2">Dane wpłacającego</th>
+					</tr>
+				</thead>
+				<tbody>{list}</tbody>
+			</table>
+		</div>
 	);
 }
 function RecipientDataTable(props) {
@@ -152,14 +146,16 @@ function RecipientDataTable(props) {
 		/>
 	));
 	return (
-		<table>
-			<thead>
-				<tr>
-					<td colSpan="2">Dane odbiorcy</td>
-				</tr>
-			</thead>
-			<tbody>{list}</tbody>
-		</table>
+		<div className="container">
+			<table className="tableData">
+				<thead>
+					<tr>
+						<th colSpan="2">Dane odbiorcy</th>
+					</tr>
+				</thead>
+				<tbody>{list}</tbody>
+			</table>
+		</div>
 	);
 }
 

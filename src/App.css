@@ -13,20 +13,17 @@ body {
 }
 
 /** Paper sizes **/
-
 body.A4 .sheet {
 	width: 210mm;
 	height: 296mm;
 }
 
-/** Fix for Chrome issue #273306 **/
 @media print {
 	body.A4 {
 		width: 210mm;
 	}
 }
 /*paper-css*/
-
 @media print {
 	.onlyScreen {
 		display: none;
@@ -53,115 +50,57 @@ body.A4 .sheet {
 	margin: auto;
 }
 
-.DepositTable {
-	max-width: 300px;
-}
-
-.onlyScreen {
-}
-
-.Input-component {
-	background-color: #5c66ff;
-	text-align: center;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	color: white;
-}
-
-.header {
-	font-size: 2em;
-	font-weight: bold;
-	text-align: center;
-}
-
 .nextPage {
 	page-break-before: always;
 }
 
-.paragraph {
-	font-size: 1em;
-	margin: 0.5em 2em;
-}
-.row {
-	display: flex;
-}
-.containerA4 {
-	width: 21cm;
-	height: 29.7cm;
-	padding: 0;
-	margin: 0;
-}
-
 canvas {
-	/*transform: rotate(90deg) translateY(82px) translateX(81px);*/
 	width: 14.8cm;
 	height: 10.5cm;
 	object-fit: contain;
 }
-.myContainer {
-	display: flex;
-	width: 10.5cm;
-	height: 14.8cm;
-}
 
-img {
-	transform: rotate(90deg) translateY(82px) translateX(81px);
-	width: 14.8cm;
-	height: 10.5cm;
-}
-
-.tableStyle {
-	display: flex;
-	justify-content: center;
-}
-
-.App-header {
-	background-color: #282c34;
-	font-size: calc(16px + 2vmin);
-	color: white;
+td,
+th {
 	text-align: center;
+	border: 1px solid rgba(122, 122, 122, 0.397);
 }
-.blankietCanvas {
-	/*	border: 1px solid red;*/
-	width: 10.5cm;
-	height: 14.8cm;
-	/*	width: 50%;
-	height: 50%;*/
+tr {
+	height: 30px;
 }
 
-table {
+input {
 	width: 100%;
-	border-collapse: collapse;
-	table-layout: fixed;
-	vertical-align: top;
-	margin-bottom: 15px;
-	border: 1px solid #cccccc;
+	padding: 6px 10px;
+	margin: 2px 0;
+	box-sizing: border-box;
+	border: none;
+	width: 100%;
+	border-radius: 4px;
+}
+.container {
+	background-color: #e9ebed;
+	padding: 10px;
+	margin: 5px auto 5px auto;
+}
+input:focus {
+	background-color: #d2d6da;
+	border: none;
+	outline: none;
+}
+::selection {
+	background: #006daa;
+	color: white;
 }
 
-.divButton {
+.header {
+	background-color: #006daa;
+	color: white;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+h1 {
 	text-align: center;
-}
-
-tbody td:first-child {
-	width: 20%;
-	color: red;
-}
-td:nth-child(n + 2) {
-	width: 20%;
-	color: rgb(76, 0, 255);
-}
-td {
-	border: 1px solid black;
-}
-
-td input {
-	width: 90% !important;
-	margin: auto;
-	display: block;
-}
-
-button {
-	margin-top: 0.5em;
-	font-size: 1em;
+	margin-top: 10px;
 }

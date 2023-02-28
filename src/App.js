@@ -1,52 +1,26 @@
 import "./App.css";
 import CashDepositTable from "./components/InputTable";
-import PaymentSpecification from "./components/PaymentSpecification.js";
-import { TransferFormView } from "./components/TransferFormView";
+import "./components/InputTable.css";
+import PaymentSpecification from "./components/PaymentSpecification";
+import "./components/PaymentSpecification.css";
 import {
 	YourDataTable,
 	RecipientDataTable,
 } from "./components/TransferFormData";
+import "./components/TransferFormData.css";
+import TransferFormImage from "./components/TransferFormImage";
+import "./components/TransferFormImage.css";
 import React from "react";
-import druk from "./images/druk.png";
 import {
 	convertValueNumberGroszy,
 	convertValueWordGroszy,
 } from "./components/convertNumbers";
+import InputLabel from "./components/InputLabel";
+import "./components/InputLabel.css";
+import DivButtons from "./components/Buttons";
+import "./components/Buttons.css";
+import print from "./components/print";
 
-/*function NameForm({ product, onFilterTextChange }) {
-	return (
-		<label>
-			{product}
-			<input
-				type="text"
-				value={product}
-				onChange={(e) => onFilterTextChange(e.target.value)}
-			/>
-		</label>
-	);
-}*/
-/*function CityBank(props){
-	
-	return
-		name: "branchCity",
-		visibleName: "miasto oddziału w którym dokonano wpłaty",
-		value: props.branchCityValue,
-	},
-}*/
-class NameForm extends React.Component {
-	render() {
-		return (
-			<label>
-				{this.props.label}
-				<input
-					type="text"
-					value={this.props.value}
-					onChange={(event) => this.props.onChange(event)}
-				/>
-			</label>
-		);
-	}
-}
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -74,7 +48,7 @@ class App extends React.Component {
 			amountTwenty: 0,
 			amountTens: 0,
 			imgCanvas: "",
-			pushBtn: false,
+			overloaded: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleChangeData = this.handleChangeData.bind(this);
@@ -83,17 +57,6 @@ class App extends React.Component {
 		this.handleButtonSave = this.handleButtonSave.bind(this);
 		this.handleButtonLoad = this.handleButtonLoad.bind(this);
 		this.handleInputName = this.handleInputName.bind(this);
-	}
-
-	componentDidMount() {
-		if (this.state.pushBtn === true) {
-			console.log("ok");
-		}
-	}
-	componentDidUpdate() {
-		if (this.state.pushBtn === true) {
-			console.log("ok");
-		}
 	}
 	handleChangeData(event) {
 		const value = event.target.value;
@@ -122,34 +85,18 @@ class App extends React.Component {
 			value = event.target.value;
 		}
 		const name = event.target.name;
-		console.log(name, "name");
 		this.setState({ [name]: value });
 	}
 	handleButtonSave() {
 		const data = this.state;
-		console.log(data);
-		const data2 = {
-			yourName: this.state.yourName,
-			yourStreet: this.state.yourStreet,
-			yourBuildingNr: this.state.yourBuildingNr,
-		};
 		localStorage.setItem("my-key", JSON.stringify(data));
-		console.log("my-key");
 	}
 	handleButtonLoad() {
 		const stringifiedPerson = localStorage.getItem("my-key");
 		const personAsObjectAgain = JSON.parse(stringifiedPerson);
-		console.log(personAsObjectAgain, "wczytanie");
 		this.setState(personAsObjectAgain);
 	}
-	handleButtonPrint(event) {
-		this.setState({ pushBtn: true });
-
-		console.log(this.state.pushBtn);
-		/*	const canvas = document.querySelector("canvas");
-		if (canvas) {
-			canvas.remove();
-		}*/
+	handleButtonPrint() {
 		const sumFives = (parseFloat(this.state.amountFives) * 5).toFixed(2);
 		const sumTwos = (parseFloat(this.state.amountTwos) * 2).toFixed(2);
 		const sumOnes = (parseFloat(this.state.amountOnes) * 1).toFixed(2);
@@ -199,22 +146,18 @@ class App extends React.Component {
 			this.state.yourZipCode +
 			" " +
 			this.state.yourCity;
-		this.setState({
-			imgCanvas: print(
-				totalValue,
-				wordValue,
-				sealNumber,
-				this.state.recipientName,
-				recipientAdress,
-				this.state.recipientAccountNr,
-				this.state.yourName,
-				yourAdress,
-				this.state.paymentTitle
-			),
-		});
-		//	window.print();
+		print(
+			totalValue,
+			wordValue,
+			sealNumber,
+			this.state.recipientName,
+			recipientAdress,
+			this.state.recipientAccountNr,
+			this.state.yourName,
+			yourAdress,
+			this.state.paymentTitle
+		);
 	}
-
 	render() {
 		const sumFives = (parseFloat(this.state.amountFives) * 5).toFixed(2);
 		const sumTwos = (parseFloat(this.state.amountTwos) * 2).toFixed(2);
@@ -235,7 +178,6 @@ class App extends React.Component {
 			parseFloat(this.state.amountFifty) +
 			parseFloat(this.state.amountTwenty) +
 			parseFloat(this.state.amountTens);
-		console.log(totalAmount);
 		const totalValue = (
 			Math.round(
 				(parseFloat(sumFives) +
@@ -260,15 +202,19 @@ class App extends React.Component {
 		).toFixed(2);
 		const overloaded =
 			sumWeight >= 16 ? "Worek za ciężki" : "Worek ma odpowiednią wagę";
-
+		const disableBtn = sumWeight >= 16 ? true : false;
+		const tooltip = sumWeight >= 16 ? "tooltip" : "";
 		return (
 			<div>
 				<div className="onlyScreen">
 					<div className="screenView">
-						<header className="App-header">Wpłaty zamknięte</header>
-						<div className="Input-component ">
-							<NameForm
+						<div className="header">
+							<h1>Wpłaty zamknięte</h1>
+							<InputLabel
+								for="seal"
+								id="seal"
 								label="Numer plomby"
+								placeholder="Numer plomby"
 								value={this.state.sealNumber}
 								onChange={this.handleInputSealNumber}
 							/>
@@ -289,41 +235,43 @@ class App extends React.Component {
 							totalAmount={totalAmount}
 							totalValue={totalValue}
 							overloaded={overloaded}
+							overloadedAlert={sumWeight}
 							sumWeight={sumWeight}
 							onChange={this.handleChange}
 						/>
-						<div className="divButton">
-							<TransferFormView onClick={this.handleButtonPrint} />
-							<button onClick={this.handleButtonSave}>Zapisz</button>
-							<button onClick={this.handleButtonLoad}>Wczytaj</button>
-						</div>
-						<div>
-							<ul>
-								<YourDataTable
-									onChange={this.handleChangeData}
-									yourNameValue={this.state.yourName}
-									yourStreetValue={this.state.yourStreet}
-									yourBuildingNrValue={this.state.yourBuildingNr}
-									yourApartmenNrValue={this.state.yourApartmenNr}
-									yourZipCodeValue={this.state.yourZipCode}
-									yourCityValue={this.state.yourCity}
-									branchCityValue={this.state.branchCity}
-								/>
-							</ul>
-							<ul>
-								<RecipientDataTable
-									onChange={this.handleChangeData}
-									recipientNameValue={this.state.recipientName}
-									recipientStreetValue={this.state.recipientStreet}
-									recipientBuildingNrValue={this.state.recipientBuildingNr}
-									recipientApartmenNrValue={this.state.recipientApartmenNr}
-									recipientZipCodeValue={this.state.recipientZipCode}
-									recipientCityValue={this.state.recipientCity}
-									recipientAccountNrValue={this.state.recipientAccountNr}
-									paymentTitleValue={this.state.paymentTitle}
-								/>
-							</ul>
-						</div>
+
+						<YourDataTable
+							onChange={this.handleChangeData}
+							yourNameValue={this.state.yourName}
+							yourStreetValue={this.state.yourStreet}
+							yourBuildingNrValue={this.state.yourBuildingNr}
+							yourApartmenNrValue={this.state.yourApartmenNr}
+							yourZipCodeValue={this.state.yourZipCode}
+							yourCityValue={this.state.yourCity}
+							branchCityValue={this.state.branchCity}
+						/>
+						<RecipientDataTable
+							onChange={this.handleChangeData}
+							recipientNameValue={this.state.recipientName}
+							recipientStreetValue={this.state.recipientStreet}
+							recipientBuildingNrValue={this.state.recipientBuildingNr}
+							recipientApartmenNrValue={this.state.recipientApartmenNr}
+							recipientZipCodeValue={this.state.recipientZipCode}
+							recipientCityValue={this.state.recipientCity}
+							recipientAccountNrValue={this.state.recipientAccountNr}
+							paymentTitleValue={this.state.paymentTitle}
+						/>
+						<DivButtons
+							disabled={disableBtn}
+							tooltipClass={tooltip}
+							onClickDisable={this.handleButtonPrint}
+							buttonDisableName="Drukuj"
+							tooltipText="Worek za ciężki"
+							onClickMiddle={this.handleButtonSave}
+							buttonMiddleName="Zapisz"
+							onClickRight={this.handleButtonLoad}
+							buttonRightName="Wczytaj"
+						/>
 					</div>
 				</div>
 
@@ -355,101 +303,9 @@ class App extends React.Component {
 					/>
 				</div>
 
-				<div className="containerA4 nextPage A4 sheet">
-					<div className="myContainer">
-						<div className="blankietCanvas">
-							<img className="imgimg" alt="blankier"></img>
-						</div>
-						<div className="blankietCanvas">
-							<img className="imgimg" alt="blankier"></img>
-						</div>
-					</div>
-					<div className="myContainer">
-						<div className="blankietCanvas">
-							<img className="imgimg" alt="blankier"></img>
-						</div>
-					</div>
-				</div>
+				<TransferFormImage />
 			</div>
 		);
 	}
 }
 export default App;
-
-function print(
-	totalValue,
-	wordValue,
-	sealNumber,
-	recipentName,
-	recipentAdress,
-	accountNumber,
-	yourName,
-	yourAdress,
-	title
-) {
-	const canvas = document.createElement("canvas");
-	const ctx = canvas.getContext("2d");
-	canvas.height = 1253;
-	canvas.width = 1772;
-	const image = new Image();
-	image.onload = canvasLoadAsync;
-	function formField(text, x, y) {
-		if (text.length <= 27) {
-			text = text.toUpperCase();
-			for (let i = 0; i < text.length; i++) {
-				ctx.font = "bold 50px Courier";
-				if (i === 0) {
-					ctx.fillText(text[i], x, y);
-				} else {
-					ctx.fillText(text[i], x + 59 * i, y);
-				}
-			}
-		} else {
-			for (let i = 0; i < text.length; i++) {
-				ctx.font = "bold 50px Courier";
-				ctx.fillText(text, x, y);
-			}
-		}
-	}
-	function canvasLoad() {
-		ctx.drawImage(image, 0, 0);
-		formField(recipentName, 110, 100);
-		formField(recipentAdress, 110, 200);
-		formField(accountNumber, 110, 300);
-		const sum = totalValue.toString();
-		formField(sum, 1003, 400);
-		formField(wordValue, 110, 500);
-		formField(yourName, 110, 600);
-		formField(yourAdress, 110, 700);
-		formField(title, 110, 800);
-		const secureEnvelope = "BEZPIECZNA KOPERTA O NR. " + sealNumber;
-		formField(secureEnvelope, 110, 900);
-		/*const now = new Date();
-			"UTARG WARSZAWA " +
-			(now.getDate() < 10 ? "0" + now.getDate() : now.getDate()) +
-			"." +
-			(now.getMonth() < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1) +
-			//(now.getMonth() + 1) +
-			"." +
-			now.getFullYear();
-      */
-		const url = canvas.toDataURL("image/jpeg", 0.5);
-		const img = document.querySelectorAll(".imgimg");
-		img.forEach(function (img) {
-			img.src = url;
-		});
-		console.log("imge wczytany 1111");
-		console.log("imge wczytany 222");
-	}
-	image.src = druk;
-	async function canvasLoadAsync() {
-		await canvasLoad();
-		await printCanvas();
-	}
-}
-
-function printCanvas() {
-	console.log("print 111");
-	window.print();
-	console.log("print 222");
-}
