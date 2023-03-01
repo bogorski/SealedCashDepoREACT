@@ -1,5 +1,7 @@
 https://bogorski.github.io/SealedCashDepoREACT/
 
+Strona internetowa pozwalająca stworzyć wpłatę zamkniętą do banku. Przydatne dla operatorów maszyn vendingowych, biletomatów, parkomatów i wszędzie tam gdzie trzeba rozliczyć dużą ilość bilonu. Tworzy gotowy blankiet oraz specyfikację wpłaty do wydruku. Pozwala zapisać dane w LocalStorage.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
