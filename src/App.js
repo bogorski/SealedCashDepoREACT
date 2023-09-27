@@ -25,21 +25,23 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			yourName: "",
-			yourStreet: "",
-			yourBuildingNr: "",
-			yourApartmenNr: "",
-			yourZipCode: "",
-			yourCity: "",
-			branchCity: "",
-			recipientName: "",
-			recipientStreet: "",
-			recipientBuildingNr: "",
-			recipientApartmenNr: "",
-			recipientZipCode: "",
-			recipientCity: "",
-			recipientAccountNr: "",
-			paymentTitle: "",
+			dataEntered: {
+				yourName: "",
+				yourStreet: "",
+				yourBuildingNr: "",
+				yourApartmenNr: "",
+				yourZipCode: "",
+				yourCity: "",
+				branchCity: "",
+				recipientName: "",
+				recipientStreet: "",
+				recipientBuildingNr: "",
+				recipientApartmenNr: "",
+				recipientZipCode: "",
+				recipientCity: "",
+				recipientAccountNr: "",
+				paymentTitle: "",
+			},
 			sealNumber: "",
 			amountFives: 0,
 			amountTwos: 0,
@@ -47,9 +49,12 @@ class App extends React.Component {
 			amountFifty: 0,
 			amountTwenty: 0,
 			amountTens: 0,
+
 			imgCanvas: "",
 			overloaded: false,
 		};
+		this.handleSaveToXml = this.handleSaveToXml.bind(this);
+		this.handleLoadXml = this.handleLoadXml.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleChangeData = this.handleChangeData.bind(this);
 		this.handleInputSealNumber = this.handleInputSealNumber.bind(this);
@@ -58,10 +63,59 @@ class App extends React.Component {
 		this.handleButtonLoad = this.handleButtonLoad.bind(this);
 		this.handleInputName = this.handleInputName.bind(this);
 	}
+
+	handleSaveToXml() {
+		const filename =
+			"Dane użytkownika " + this.state.dataEntered.yourName + ".xml";
+		const data = this.state.dataEntered;
+		let xmltext = '<?xml version="1.0" encoding="UTF-8"?><DATA>';
+		for (const [key, value] of Object.entries(data)) {
+			xmltext +=
+				" <" +
+				key.toUpperCase() +
+				">" +
+				value +
+				"</" +
+				key.toUpperCase() +
+				"> ";
+		}
+		xmltext += "</DATA>";
+		const a = document.createElement("a");
+		a.setAttribute("download", filename);
+		const blow = new Blob([xmltext], { type: "text/xml" });
+		a.href = window.URL.createObjectURL(blow);
+		a.click();
+	}
+
+	handleLoadXml(event) {
+		const file = event.target.files[0];
+		if (!file) {
+			return;
+		}
+		const reader = new FileReader();
+		reader.readAsText(file);
+		reader.onloadend = (evt) => {
+			const readerData = evt.target.result;
+			const parser = new DOMParser();
+			const xml = parser.parseFromString(readerData, "text/xml");
+			const data = this.state.dataEntered;
+			for (const [key] of Object.entries(data)) {
+				let upperCaseKey = key.toUpperCase();
+				let loadValue = xml
+					.evaluate(`//${upperCaseKey}`, xml)
+					.iterateNext().textContent;
+				this.setState((prevState) => ({
+					dataEntered: { ...prevState.dataEntered, [key]: loadValue },
+				}));
+			}
+		};
+	}
 	handleChangeData(event) {
 		const value = event.target.value;
 		const name = event.target.name;
-		this.setState({ [name]: value });
+		this.setState((prevState) => ({
+			dataEntered: { ...prevState.dataEntered, [name]: value },
+		}));
 	}
 
 	handleInputSealNumber(event) {
@@ -124,38 +178,40 @@ class App extends React.Component {
 		const wordValue = convertValueNumberGroszy(totalValue);
 		const sealNumber = this.state.sealNumber;
 		const recipientAdressNr =
-			this.state.recipientApartmenNr && " m. " + this.state.recipientApartmenNr;
+			this.state.dataEntered.recipientApartmenNr &&
+			" m. " + this.state.dataEntered.recipientApartmenNr;
 		const recipientAdress =
-			this.state.recipientStreet +
+			this.state.dataEntered.recipientStreet +
 			" " +
-			this.state.recipientBuildingNr +
+			this.state.dataEntered.recipientBuildingNr +
 			recipientAdressNr +
 			", " +
-			this.state.recipientZipCode +
+			this.state.dataEntered.recipientZipCode +
 			" " +
-			this.state.recipientCity;
+			this.state.dataEntered.recipientCity;
 
 		const yourAdressNr =
-			this.state.yourApartmenNr && " m. " + this.state.yourApartmenNr;
+			this.state.dataEntered.yourApartmenNr &&
+			" m. " + this.state.dataEntered.yourApartmenNr;
 		const yourAdress =
-			this.state.yourStreet +
+			this.state.dataEntered.yourStreet +
 			" " +
-			this.state.yourBuildingNr +
+			this.state.dataEntered.yourBuildingNr +
 			yourAdressNr +
 			", " +
-			this.state.yourZipCode +
+			this.state.dataEntered.yourZipCode +
 			" " +
-			this.state.yourCity;
+			this.state.dataEntered.yourCity;
 		print(
 			totalValue,
 			wordValue,
 			sealNumber,
-			this.state.recipientName,
+			this.state.dataEntered.recipientName,
 			recipientAdress,
-			this.state.recipientAccountNr,
-			this.state.yourName,
+			this.state.dataEntered.recipientAccountNr,
+			this.state.dataEntered.yourName,
 			yourAdress,
-			this.state.paymentTitle
+			this.state.dataEntered.paymentTitle
 		);
 	}
 	render() {
@@ -242,24 +298,30 @@ class App extends React.Component {
 
 						<YourDataTable
 							onChange={this.handleChangeData}
-							yourNameValue={this.state.yourName}
-							yourStreetValue={this.state.yourStreet}
-							yourBuildingNrValue={this.state.yourBuildingNr}
-							yourApartmenNrValue={this.state.yourApartmenNr}
-							yourZipCodeValue={this.state.yourZipCode}
-							yourCityValue={this.state.yourCity}
-							branchCityValue={this.state.branchCity}
+							yourNameValue={this.state.dataEntered.yourName}
+							yourStreetValue={this.state.dataEntered.yourStreet}
+							yourBuildingNrValue={this.state.dataEntered.yourBuildingNr}
+							yourApartmenNrValue={this.state.dataEntered.yourApartmenNr}
+							yourZipCodeValue={this.state.dataEntered.yourZipCode}
+							yourCityValue={this.state.dataEntered.yourCity}
+							branchCityValue={this.state.dataEntered.branchCity}
 						/>
 						<RecipientDataTable
 							onChange={this.handleChangeData}
-							recipientNameValue={this.state.recipientName}
-							recipientStreetValue={this.state.recipientStreet}
-							recipientBuildingNrValue={this.state.recipientBuildingNr}
-							recipientApartmenNrValue={this.state.recipientApartmenNr}
-							recipientZipCodeValue={this.state.recipientZipCode}
-							recipientCityValue={this.state.recipientCity}
-							recipientAccountNrValue={this.state.recipientAccountNr}
-							paymentTitleValue={this.state.paymentTitle}
+							recipientNameValue={this.state.dataEntered.recipientName}
+							recipientStreetValue={this.state.dataEntered.recipientStreet}
+							recipientBuildingNrValue={
+								this.state.dataEntered.recipientBuildingNr
+							}
+							recipientApartmenNrValue={
+								this.state.dataEntered.recipientApartmenNr
+							}
+							recipientZipCodeValue={this.state.dataEntered.recipientZipCode}
+							recipientCityValue={this.state.dataEntered.recipientCity}
+							recipientAccountNrValue={
+								this.state.dataEntered.recipientAccountNr
+							}
+							paymentTitleValue={this.state.dataEntered.paymentTitle}
 						/>
 						<DivButtons
 							disabled={disableBtn}
@@ -272,18 +334,29 @@ class App extends React.Component {
 							onClickRight={this.handleButtonLoad}
 							buttonRightName="Wczytaj"
 						/>
+						<div className="divTwoButtons" style={{ textAlign: "center" }}>
+							<button onClick={this.handleSaveToXml}>Zapisz jako xml</button>
+							<label className="loadFileButton">
+								Wczytaj plik xml
+								<input
+									type="file"
+									className="loadFile"
+									onChange={this.handleLoadXml}
+								/>
+							</label>
+						</div>
 					</div>
 				</div>
 
 				<div className="containerA4 A4 sheet">
 					<PaymentSpecification
-						yourName={this.state.yourName}
-						yourStreet={this.state.yourStreet}
-						yourBuildingNr={this.state.yourBuildingNr}
-						yourApartmenNr={this.state.yourApartmenNr}
-						yourZipCode={this.state.yourZipCode}
-						yourCity={this.state.yourCity}
-						branchCity={this.state.branchCity}
+						yourName={this.state.dataEntered.yourName}
+						yourStreet={this.state.dataEntered.yourStreet}
+						yourBuildingNr={this.state.dataEntered.yourBuildingNr}
+						yourApartmenNr={this.state.dataEntered.yourApartmenNr}
+						yourZipCode={this.state.dataEntered.yourZipCode}
+						yourCity={this.state.dataEntered.yourCity}
+						branchCity={this.state.dataEntered.branchCity}
 						totalValue={totalValue}
 						AmountInWords={convertValueWordGroszy(totalValue)}
 						sealNumber={this.state.sealNumber}

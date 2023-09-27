@@ -69,6 +69,27 @@ tr {
 	height: 30px;
 }
 
+input[type="file"] {
+	display: none;
+}
+
+.loadFileButton {
+	margin: 0.5em;
+	font-size: 0.9em;
+	background-color: #006daa;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 9px;
+	min-width: 120px;
+	display: inline-block;
+}
+.loadFileButton:hover {
+	background-color: #004e7a;
+	color: white;
+	transform: scale(0.9);
+}
+
 input {
 	width: 100%;
 	padding: 6px 10px;
